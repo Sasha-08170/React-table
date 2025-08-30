@@ -2,32 +2,32 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import styles from './InventoryTable.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTags, // Stock Number (артикул/товар)
-  faBuilding, // Make (производитель)
-  faCar, // Model (модель авто)
-  faCalendarDay, // Year (год)
-  faPaintRoller, // Color (цвет) - более универсально, чем палитра
-  faDollarSign, // Price (цена)
-  faArrowDown, // Для загрузки
-  faPlus, // Для новой записи
-  faEraser, // Для очистки поиска
-  faPrint, // Для печати
-  faSearch, // Для поля поиска
+  faTags, // Иконка для Stock Number (артикул/товар)
+  faBuilding, // Иконка для Make (производитель)
+  faCar, // Иконка для Model (модель авто)
+  faCalendarDay, // Иконка для Year (год)
+  faPaintRoller, // Иконка для Color (цвет)
+  faDollarSign, // Иконка для Price (цена)
+  faArrowDown, // Иконка для загрузки
+  faPlus, // Иконка для новой записи
+  faEraser, // Иконка для очистки поиска
+  faPrint, // Иконка для печати
+  faSearch, // Иконка для поля поиска
 } from '@fortawesome/free-solid-svg-icons';
 
-// Интерфейс для одной строки таблицы
+// Интерфейс для одной строки таблицы инвентаря
 export interface InventoryItem {
-  stockNumber: string;
-  make: string;
-  model: string;
-  year: number;
-  color: string;
-  mileage: number; // Изменено на number
-  price: number; // Изменено на number
-  vin: string;
+  stockNumber: string; // Артикул/номер товара
+  make: string; // Производитель
+  model: string; // Модель
+  year: number; // Год выпуска
+  color: string; // Цвет
+  mileage: number; // Пробег
+  price: number; // Цена
+  vin: string; // VIN-номер
 }
 
-// Локальные данные для таблицы (пример)
+// Пример локальных данных для таблицы
 const LOCAL_DATA: InventoryItem[] = [
   {
     stockNumber: '1A2B3C',
@@ -81,22 +81,24 @@ const LOCAL_DATA: InventoryItem[] = [
   },
 ];
 
-// Тип для колонки таблицы
-interface Column {
-  key: keyof InventoryItem;
-  label: React.ReactNode;
-  format?: (value: any) => string; // Опциональная функция для форматирования значения ячейки
+// Тип для колонки таблицы, с опциональной функцией форматирования значения
+interface Column<K extends keyof InventoryItem = keyof InventoryItem> {
+  key: K; // Ключ поля объекта InventoryItem
+  label: React.ReactNode; // Заголовок колонки (может содержать иконку)
+  format?: (value: InventoryItem[K]) => string; // Функция форматирования значения ячейки
 }
 
 const App: React.FC = () => {
-  const [data, setData] = useState<InventoryItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Устанавливаем true по умолчанию
-  const [error, setError] = useState<string>('');
-  const [search, setSearch] = useState<string>('');
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  // Состояния для данных, загрузки, ошибок, поиска и drag&drop
+  const [data, setData] = useState<InventoryItem[]>([]); // Основные данные таблицы
+  const [loading, setLoading] = useState<boolean>(true); // Флаг загрузки данных
+  const [error, setError] = useState<string>(''); // Сообщение об ошибке
+  const [search, setSearch] = useState<string>(''); // Строка поиска
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null); // Индекс перетаскиваемой строки
 
-  // Состояние для порядка колонок
+  // Состояние для порядка колонок и drag&drop колонок
   const [columns, setColumns] = useState<Column[]>(() => [
+    // Описание колонок таблицы с иконками и форматированием
     {
       key: 'stockNumber',
       label: (
@@ -144,53 +146,54 @@ const App: React.FC = () => {
           Price <FontAwesomeIcon icon={faDollarSign} key="priceIcon" />
         </>
       ),
-      format: (value: number) => `$${value.toLocaleString()}`, // Форматирование цены
+      // Форматирование цены с разделителем тысяч и знаком доллара
+      format: (value: string | number) =>
+        typeof value === 'number' ? `$${value.toLocaleString()}` : String(value),
     },
   ]);
-  const [draggedColIndex, setDraggedColIndex] = useState<number | null>(null);
+  const [draggedColIndex, setDraggedColIndex] = useState<number | null>(null); // Индекс перетаскиваемой колонки
 
-  // Имитация загрузки данных
+  // Имитация загрузки данных (например, с сервера)
   useEffect(() => {
-    // В реальном приложении здесь был бы вызов axios
     setTimeout(() => {
-      setData(LOCAL_DATA);
-      setError('');
-      setLoading(false);
-    }, 500);
+      setData(LOCAL_DATA); // Устанавливаем локальные данные
+      setError(''); // Сбрасываем ошибку
+      setLoading(false); // Снимаем флаг загрузки
+    }, 500); // Задержка для имитации асинхронного запроса
   }, []);
 
-  // Фильтрация данных по всем полям (поиск) - используем useMemo для мемоизации
+  // Мемоизированная фильтрация данных по строке поиска
   const filteredData = useMemo(() => {
     if (!search) return data; // Если поиск пуст, возвращаем все данные
     const searchLower = search.toLowerCase();
-    return data.filter((item) => {
-      // Проверяем, содержится ли поисковая строка в любом из полей
-      return Object.values(item).some((value) => String(value).toLowerCase().includes(searchLower));
-    });
+    // Фильтруем по наличию подстроки в любом поле объекта
+    return data.filter((item) =>
+      Object.values(item).some((value) => String(value).toLowerCase().includes(searchLower)),
+    );
   }, [data, search]);
 
   // Drag and Drop обработчики для строк таблицы
   const handleDragStart = useCallback((index: number) => {
-    setDraggedIndex(index);
+    setDraggedIndex(index); // Запоминаем индекс перетаскиваемой строки
   }, []);
 
   const handleDragOver = useCallback((event: React.DragEvent<HTMLTableRowElement>) => {
-    event.preventDefault(); // Разрешаем сброс
+    event.preventDefault(); // Разрешаем сброс строки
     event.dataTransfer.dropEffect = 'move'; // Визуальный эффект
   }, []);
 
   const handleDrop = useCallback(
     (targetIndex: number) => {
+      // Если не выбрана строка или сброс на ту же строку — ничего не делаем
       if (draggedIndex === null || draggedIndex === targetIndex) {
         setDraggedIndex(null);
         return;
       }
 
-      // Создаем новую копию данных для изменения порядка
+      // Копируем данные для изменения порядка
       const newData = [...data];
 
-      // Находим фактические индексы перетаскиваемых элементов в исходном data массиве
-      // Это важно, так как draggedIndex и targetIndex относятся к filteredData
+      // Находим реальные индексы в исходном массиве данных
       const draggedItem = filteredData[draggedIndex];
       const targetItem = filteredData[targetIndex];
 
@@ -201,19 +204,18 @@ const App: React.FC = () => {
         (item) => item.stockNumber === targetItem.stockNumber,
       );
 
+      // Если не нашли элементы — сбрасываем drag&drop
       if (originalDraggedItemIndex === -1 || originalTargetItemIndex === -1) {
         setDraggedIndex(null);
         return;
       }
 
-      // Удаляем перетаскиваемый элемент из его исходной позиции
+      // Удаляем перетаскиваемый элемент и вставляем на новое место
       const [removed] = newData.splice(originalDraggedItemIndex, 1);
-
-      // Вставляем его на новую позицию
       newData.splice(originalTargetItemIndex, 0, removed);
 
-      setData(newData); // Обновляем основное состояние данных
-      setDraggedIndex(null); // Сброс состояния перетаскивания
+      setData(newData); // Обновляем данные
+      setDraggedIndex(null); // Сбрасываем drag&drop
     },
     [draggedIndex, data, filteredData],
   );
@@ -238,6 +240,7 @@ const App: React.FC = () => {
 
   // Добавление новой записи через prompt
   const handleNew = useCallback(() => {
+    // Описываем поля, которые нужно запросить у пользователя
     const prompts: { key: keyof InventoryItem; label: string; type: 'string' | 'number' }[] = [
       { key: 'stockNumber', label: 'Stock #', type: 'string' },
       { key: 'make', label: 'Make', type: 'string' },
@@ -250,6 +253,7 @@ const App: React.FC = () => {
     const newItem: Partial<InventoryItem> = {};
     let canceled = false;
 
+    // Запрашиваем значения для каждого поля
     for (const { key, label, type } of prompts) {
       const input = prompt(`Введите ${label}:`);
       if (input === null) {
@@ -286,20 +290,21 @@ const App: React.FC = () => {
     setData((prevData) => [...prevData, newItem as InventoryItem]);
   }, []);
 
-  // Печать таблицы
-  const handlePrint = useCallback(() => {
-    window.print();
-  }, []);
-
-  // Скачивание данных в CSV
+  // Скачивание данных в CSV-файл
   const handleDownload = useCallback(() => {
+    // Формируем заголовки колонок
     const header = columns.map((col) => {
-      // Извлекаем текстовое содержимое из ReactNode
       let labelText = '';
       if (typeof col.label === 'string') {
         labelText = col.label;
-      } else if (React.isValidElement(col.label)) {
-        // Простой случай: если это фрагмент с текстом и иконкой
+      } else if (
+        React.isValidElement(col.label) &&
+        col.label.props &&
+        typeof col.label.props === 'object' &&
+        col.label.props !== null &&
+        'children' in col.label.props
+      ) {
+        // Если label — это React-элемент, извлекаем текст
         const children = col.label.props.children;
         if (Array.isArray(children)) {
           labelText = children.filter((child) => typeof child === 'string').join('');
@@ -310,6 +315,7 @@ const App: React.FC = () => {
       return labelText.trim();
     });
 
+    // Формируем строки данных
     const rows = filteredData.map((item) =>
       columns
         .map((col) => {
@@ -319,18 +325,25 @@ const App: React.FC = () => {
         })
         .join(','),
     );
+    // Собираем CSV
     const csvContent = [header.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
 
+    // Создаем временную ссылку для скачивания
     const a = document.createElement('a');
     a.href = url;
     a.download = 'inventory.csv';
-    document.body.appendChild(a); // Добавляем ссылку в DOM, чтобы она была кликабельна
+    document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a); // Удаляем ссылку после клика
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }, [columns, filteredData]);
+
+  // Обработчик печати таблицы
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
 
   return (
     <div className={styles['inventory']}>
@@ -341,7 +354,9 @@ const App: React.FC = () => {
       {/* Панель поиска и кнопки */}
       <div className={styles['inventory__controls']}>
         <div className={styles['inventory__search-wrapper']}>
+          {/* Иконка поиска */}
           <FontAwesomeIcon icon={faSearch} className={styles['inventory__search-icon']} />
+          {/* Поле поиска */}
           <input
             type="text"
             placeholder="Поиск по всем полям..."
@@ -349,7 +364,8 @@ const App: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {search && ( // Кнопка очистки только если есть текст
+          {/* Кнопка очистки поиска */}
+          {search && (
             <button
               className={`${styles['inventory__button']} ${styles['inventory__clear-search-button']}`}
               onClick={() => setSearch('')}
@@ -360,12 +376,15 @@ const App: React.FC = () => {
           )}
         </div>
         <div className={styles['inventory__buttons']}>
+          {/* Кнопка добавления новой записи */}
           <button className={styles['inventory__button']} onClick={handleNew}>
             <FontAwesomeIcon icon={faPlus} /> New
           </button>
+          {/* Кнопка печати */}
           <button className={styles['inventory__button']} onClick={handlePrint}>
             <FontAwesomeIcon icon={faPrint} /> Print
           </button>
+          {/* Кнопка скачивания CSV */}
           <button className={styles['inventory__button']} onClick={handleDownload}>
             <FontAwesomeIcon icon={faArrowDown} /> Download CSV
           </button>
@@ -416,7 +435,7 @@ const App: React.FC = () => {
               // Отображение строк данных с поддержкой drag & drop
               filteredData.map((item, idx) => (
                 <tr
-                  key={item.stockNumber} // Unique key for each row
+                  key={item.stockNumber} // Уникальный ключ для строки
                   className={styles['inventory__tr']}
                   draggable
                   onDragStart={() => handleDragStart(idx)}
