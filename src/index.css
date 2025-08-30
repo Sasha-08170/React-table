@@ -1,0 +1,109 @@
+:root {
+  /* Цвета */
+  --color-text-dark: rgba(255, 255, 255, 0.87);
+  --color-background-dark: #242424;
+  --color-link-primary: #646cff;
+  --color-link-hover: #535bf2;
+  --color-button-background: #1a1a1a;
+  --color-button-border-hover: #646cff;
+
+  /* Шрифты */
+  --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-line-height-base: 1.5;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-size-button: 1em;
+  --font-size-h1: 3.2em;
+  --h1-line-height: 1.1;
+
+  /* Отступы и размеры */
+  --spacing-button-padding: 0.6em 1.2em;
+  --border-radius-base: 8px;
+  --border-width-base: 1px;
+  --min-width-body: 320px;
+  --min-height-body: 100vh;
+
+  /* Переходы */
+  --transition-speed-base: 0.25s;
+
+  /* Светлая тема */
+  --color-text-light: #213547;
+  --color-background-light: #ffffff;
+  --color-link-light-hover: #747bff;
+  --color-button-background-light: #f9f9f9;
+}
+
+/* Общие стили для :root (применяются по умолчанию, темная тема) */
+:root {
+  font-family: var(--font-family-base);
+  line-height: var(--font-line-height-base);
+  font-weight: var(--font-weight-regular);
+
+  color-scheme: light dark; /* Указываем браузеру, что поддерживаются обе схемы */
+  color: var(--color-text-dark);
+  background-color: var(--color-background-dark);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Стили для ссылок */
+a {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-link-primary);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--color-link-hover);
+}
+
+/* Стили для body */
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: var(--min-width-body);
+  min-height: var(--min-height-body);
+}
+
+/* Стили для заголовка H1 */
+h1 {
+  font-size: var(--font-size-h1);
+  line-height: var(--h1-line-height);
+}
+
+/* Стили для кнопок */
+button {
+  border-radius: var(--border-radius-base);
+  border: var(--border-width-base) solid transparent;
+  padding: var(--spacing-button-padding);
+  font-size: var(--font-size-button);
+  font-weight: var(--font-weight-medium);
+  font-family: inherit; /* Кнопки наследуют шрифт от body/root */
+  background-color: var(--color-button-background);
+  cursor: pointer;
+  transition: border-color var(--transition-speed-base);
+}
+button:hover {
+  border-color: var(--color-button-border-hover);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Медиа-запрос для светлой темы */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--color-text-light);
+    background-color: var(--color-background-light);
+  }
+  a:hover {
+    color: var(--color-link-light-hover);
+  }
+  button {
+    background-color: var(--color-button-background-light);
+  }
+}

@@ -1,0 +1,238 @@
+/* InventoryTable.module.css */
+
+/* === Переменные === */
+:root {
+  /* Цвета */
+  --color-bg: hsl(0, 0%, 100%); /* белый */
+  --color-text: hsl(0, 0%, 20%); /* #333 */
+  --color-text-muted: hsl(0, 0%, 40%); /* #666 */
+  --color-border: hsl(0, 0%, 87%); /* #ddd */
+  --color-border-light: hsl(0, 0%, 93%); /* #eee */
+  --color-primary: hsl(216, 100%, 50%); /* #007bff */
+  --color-primary-dark: hsl(216, 100%, 35%); /* #0056b3 */
+  --color-accent: hsl(216, 100%, 35%); /* для заголовков */
+  --color-muted: hsl(0, 0%, 53%); /* #888 */
+  --color-hover: hsl(0, 0%, 95%); /* #f1f1f1 */
+  --color-table-alt: hsl(0, 0%, 98%); /* #f9f9f9 */
+
+  /* Типографика */
+  --font-family: Arial, sans-serif;
+  --font-size-base: 1em;
+  --font-size-title: 2.5em;
+
+  /* Отступы и радиусы */
+  --radius: 8px;
+  --radius-sm: 4px;
+  --padding-base: 20px;
+  --padding-sm: 10px;
+  --shadow: 0 4px 8px hsla(0, 0%, 0%, 0.1);
+}
+
+/* === Контейнер === */
+.inventory {
+  padding: var(--padding-base);
+  font-family: var(--font-family);
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: var(--color-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--color-text);
+}
+
+/* === Заголовок === */
+.inventory__header {
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: 10px;
+}
+
+.inventory__title {
+  font-size: var(--font-size-title);
+  color: var(--color-accent);
+  margin: 0;
+  font-weight: 600;
+}
+
+/* === Контролы === */
+.inventory__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.inventory__search-wrapper {
+  position: relative;
+  flex-grow: 1;
+  min-width: 250px;
+}
+
+.inventory__search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: hsl(0, 0%, 67%); /* #aaa */
+  pointer-events: none;
+}
+
+.inventory__search {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid hsl(0, 0%, 80%); /* #ccc */
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  box-sizing: border-box;
+}
+
+.inventory__search:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.inventory__clear-search-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 0 5px;
+}
+
+.inventory__clear-search-button:hover {
+  color: var(--color-text-muted);
+}
+
+/* === Кнопки === */
+.inventory__buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.inventory__button {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border: none;
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.inventory__button:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* === Таблица === */
+.inventory__table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.inventory__table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.inventory__th,
+.inventory__td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inventory__th {
+  background-color: hsl(0, 0%, 97%); /* #f8f8f8 */
+  font-weight: bold;
+  color: var(--color-text-muted);
+  position: relative;
+  user-select: none;
+}
+
+.inventory__th svg {
+  margin-left: 8px;
+  color: hsl(0, 0%, 47%); /* #777 */
+}
+
+.inventory__tr:nth-child(even) {
+  background-color: var(--color-table-alt);
+}
+
+.inventory__tr:hover {
+  background-color: var(--color-hover);
+}
+
+/* Drag row */
+.inventory__tr[draggable='true']:active {
+  cursor: grabbing;
+  opacity: 0.7;
+}
+
+/* === Адаптивность === */
+@media (max-width: 768px) {
+  .inventory__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .inventory__search-wrapper {
+    width: 100%;
+  }
+  .inventory__buttons {
+    width: 100%;
+    justify-content: stretch;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+  .inventory__button {
+    flex-shrink: 0;
+  }
+}
+
+/* === Печать === */
+@media print {
+  body {
+    background-color: var(--color-bg);
+  }
+  .inventory__controls,
+  .inventory__header {
+    display: none;
+  }
+  .inventory {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+  .inventory__table-wrapper {
+    border: none;
+  }
+  .inventory__table {
+    min-width: auto;
+  }
+  .inventory__th,
+  .inventory__td {
+    border: 1px solid hsl(0, 0%, 80%);
+  }
+  .inventory__th {
+    background-color: hsl(0, 0%, 88%);
+  }
+  .inventory__tr:nth-child(even) {
+    background-color: hsl(0, 0%, 94%);
+  }
+}
