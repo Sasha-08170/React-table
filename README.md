@@ -41,8 +41,6 @@ export interface InventoryItem {
   vin: string; // VIN-код
 }
 ```
-````
-
 ---
 
 ## 🖼 Интерфейс
@@ -94,19 +92,3 @@ src/
  ├── App.tsx
  └── main.tsx
 ```
-
----
-
-## 🖇 Пример использования
-
-```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
-```
-
-После запуска вы получите таблицу, где можно искать, перетаскивать строки и колонки, добавлять новые записи, печатать и экспортировать CSV.
-
----
