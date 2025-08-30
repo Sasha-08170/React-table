@@ -1,71 +1,73 @@
 :root {
   /* Цвета */
-  --color-text-dark: rgba(255, 255, 255, 0.87);
-  --color-background-dark: #242424;
-  --color-link-primary: #646cff;
-  --color-link-hover: #535bf2;
-  --color-button-background: #1a1a1a;
-  --color-button-border-hover: #646cff;
+  --color-bg: #fff;
+  --color-text: #333;
+  --color-link: #007bff;
+  --color-link-hover: #0056b3;
 
   /* Шрифты */
-  --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --font-line-height-base: 1.5;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-size-button: 1em;
-  --font-size-h1: 3.2em;
-  --h1-line-height: 1.1;
+  --font-family: Arial, sans-serif;
+  --font-size-base: 1em;
+  --font-size-title: 2.5em;
 
   /* Отступы и размеры */
-  --spacing-button-padding: 0.6em 1.2em;
-  --border-radius-base: 8px;
-  --border-width-base: 1px;
-  --min-width-body: 320px;
-  --min-height-body: 100vh;
-
-  /* Переходы */
-  --transition-speed-base: 0.25s;
-
-  /* Светлая тема */
-  --color-text-light: #213547;
-  --color-background-light: #ffffff;
-  --color-link-light-hover: #747bff;
-  --color-button-background-light: #f9f9f9;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --padding-base: 20px;
+  --padding-sm: 10px;
+  --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Общие стили для :root (применяются по умолчанию, темная тема) */
-:root {
-  font-family: var(--font-family-base);
-  line-height: var(--font-line-height-base);
-  font-weight: var(--font-weight-regular);
-
-  color-scheme: light dark; /* Указываем браузеру, что поддерживаются обе схемы */
-  color: var(--color-text-dark);
-  background-color: var(--color-background-dark);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Базовые стили для body */
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Стили для ссылок */
 a {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-link-primary);
-  text-decoration: inherit;
+  color: var(--color-link);
+  text-decoration: none;
 }
 a:hover {
   color: var(--color-link-hover);
 }
 
-/* Стили для body */
-body {
+/* Стили для заголовков */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family);
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: var(--min-width-body);
-  min-height: var(--min-height-body);
+}
+
+/* Стили для кнопок */
+button {
+  border-radius: var(--radius-sm);
+  border: none;
+  padding: var(--padding-sm) var(--padding-base);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  background-color: var(--color-link);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background-color: var(--color-link-hover);
+}
+button:focus {
+  outline: 2px solid var(--color-link-hover);
 }
 
 /* Стили для заголовка H1 */
