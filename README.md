@@ -3,8 +3,6 @@
 
 Интерактивная таблица для управления инвентарем автомобилей с поддержкой поиска, экспорта данных и drag & drop.
 
----
-
 ## ✨ Возможности
 
 - 🔎 **Поиск** по всем полям
@@ -16,8 +14,6 @@
 - 🎨 Форматирование значений (например, `$12,000` для цены)
 - ⚡ Обработка состояний: _загрузка_, _ошибка_, _нет данных_
 
----
-
 ## 🛠 Технологии
 
 - [React 18](https://react.dev/)
@@ -25,11 +21,8 @@
 - [FontAwesome](https://fontawesome.com/) — иконки
 - **CSS-модули** для стилей
 
----
-
 ## 📑 Интерфейс данных
 
-```ts
 export interface InventoryItem {
   stockNumber: string; // Артикул/ID
   make: string; // Производитель
@@ -40,8 +33,6 @@ export interface InventoryItem {
   price: number; // Цена
   vin: string; // VIN-код
 }
-```
----
 
 ## 🖼 Интерфейс
 
@@ -60,8 +51,6 @@ export interface InventoryItem {
 - "Ошибка при загрузке данных"
 - "Нет данных, удовлетворяющих условиям поиска"
 
----
-
 ## 🚀 Установка и запуск
 
 ```bash
@@ -76,19 +65,15 @@ npm install
 
 # 4. Запустить приложение
 npm run dev
-```
 
 Открой [http://localhost:5173](http://localhost:5173), чтобы увидеть результат.
 
----
 
 ## 📂 Структура проекта
 
-```
 src/
  ├── components/
  │    └── InventoryTable.tsx
  │    └── InventoryTable.module.css
  ├── App.tsx
  └── main.tsx
-```
