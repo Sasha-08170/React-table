@@ -65,15 +65,3 @@ npm install
 
 # 4. Запустить приложение
 npm run dev
-
-Открой [http://localhost:5173](http://localhost:5173), чтобы увидеть результат.
-
-
-## 📂 Структура проекта
-
-src/
- ├── components/
- │    └── InventoryTable.tsx
- │    └── InventoryTable.module.css
- ├── App.tsx
- └── main.tsx
