@@ -8,7 +8,6 @@ import {
   faCalendarDay, // Иконка для Year (год)
   faPaintRoller, // Иконка для Color (цвет)
   faDollarSign, // Иконка для Price (цена)
-  faArrowDown, // Иконка для загрузки
   faPlus, // Иконка для новой записи
   faEraser, // Иконка для очистки поиска
   faPrint, // Иконка для печати
@@ -290,56 +289,6 @@ const App: React.FC = () => {
     setData((prevData) => [...prevData, newItem as InventoryItem]);
   }, []);
 
-  // Скачивание данных в CSV-файл
-  const handleDownload = useCallback(() => {
-    // Формируем заголовки колонок
-    const header = columns.map((col) => {
-      let labelText = '';
-      if (typeof col.label === 'string') {
-        labelText = col.label;
-      } else if (
-        React.isValidElement(col.label) &&
-        col.label.props &&
-        typeof col.label.props === 'object' &&
-        col.label.props !== null &&
-        'children' in col.label.props
-      ) {
-        // Если label — это React-элемент, извлекаем текст
-        const children = col.label.props.children;
-        if (Array.isArray(children)) {
-          labelText = children.filter((child) => typeof child === 'string').join('');
-        } else if (typeof children === 'string') {
-          labelText = children;
-        }
-      }
-      return labelText.trim();
-    });
-
-    // Формируем строки данных
-    const rows = filteredData.map((item) =>
-      columns
-        .map((col) => {
-          const value = item[col.key];
-          // Используем функцию форматирования, если она есть
-          return col.format ? col.format(value) : String(value);
-        })
-        .join(','),
-    );
-    // Собираем CSV
-    const csvContent = [header.join(','), ...rows].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    // Создаем временную ссылку для скачивания
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'inventory.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [columns, filteredData]);
-
   // Обработчик печати таблицы
   const handlePrint = useCallback(() => {
     window.print();
@@ -383,10 +332,6 @@ const App: React.FC = () => {
           {/* Кнопка печати */}
           <button className={styles['inventory__button']} onClick={handlePrint}>
             <FontAwesomeIcon icon={faPrint} /> Print
-          </button>
-          {/* Кнопка скачивания CSV */}
-          <button className={styles['inventory__button']} onClick={handleDownload}>
-            <FontAwesomeIcon icon={faArrowDown} /> Download CSV
           </button>
         </div>
       </div>
